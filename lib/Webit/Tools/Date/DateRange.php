@@ -47,12 +47,7 @@ class DateRange {
 		$precision = $precision ?: new \DateInterval('PT1S');
 		$arRanges = array();
 		$period = $this->splitToPeriod($interval);
-		
-		$dateStart = null;
-		$dateEnd = null;
-		foreach($period as $date) {
-			$dateStart = $date;
-		}
+		// TODO: 
 	}
 	
 	/**
