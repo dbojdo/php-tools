@@ -67,7 +67,7 @@ class ObjectUpdater {
 				}
 			}
 			
-			$arValues[] = $value;
+			$arValues[$propertyName] = $value;
 		}
 		
 		return $arValues;
