@@ -12,7 +12,7 @@ class FilterCollection extends ArrayCollection {
 		return $this->getValues();
 	}
 	
-	public function removeFilter(FilterInterface filter) {
+	public function removeFilter(FilterInterface $filter) {
 		$this->removeElement(filter);
 	}
 	
