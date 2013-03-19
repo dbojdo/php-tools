@@ -8,7 +8,7 @@ class ObjectCreator {
 	 * @throws \InvalidArgumentException
 	 * @return mixed instance of $class
 	 */
-	public function newInstance($class) {
+	static public function newInstance($class) {
 		if(!class_exists($class,true)) {
 			throw new \InvalidArgumentException('Required class ('.$class.') couldn\'t be found');
 		}
