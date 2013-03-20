@@ -33,7 +33,7 @@ class FileReader {
 			$char = fgetc($f);
 		}
 		
-		echo $line;
+		return $line;
 	}
 }
 ?>
