@@ -4,8 +4,8 @@ namespace Webit\Tools\Data\QueryDecorator;
 use Webit\Tools\Data\FilterParams;
 use Webit\Tools\Data\FilterParamsInterface;
 use Webit\Tools\Data\FilterInterface;
-use Webit\Tools\Data\SorterCollectionInterface;
-use Webit\Tools\Data\FilterCollectionInterface;
+use Webit\Tools\Data\SorterCollection;
+use Webit\Tools\Data\FilterCollection;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -43,7 +43,7 @@ class ORMQueryDecorator {
 	 * 
 	 * @param FilterCollection $filterCollection
 	 */
-	public function applyFilters(FilterCollectionInterface $filterCollection) {
+	public function applyFilters(FilterCollection $filterCollection) {
 		foreach($filterCollection as $filter) {
 			$property = $filter->getProperty();
 			$property = $this->getQueryProperty($property);
@@ -203,7 +203,7 @@ class ORMQueryDecorator {
 	 * 
 	 * @param SorterCollection $sorterCollection
 	 */
-	public function applySorters(SorterCollectionInterface $sorterCollection) {
+	public function applySorters(SorterCollection $sorterCollection) {
 		foreach($sorterCollection as $sorter) {
 			$arFields = $this->getQueryProperty($sorter->getProperty());
 			foreach($arFields as $f) {
