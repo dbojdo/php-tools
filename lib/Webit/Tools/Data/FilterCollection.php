@@ -2,10 +2,18 @@
 namespace Webit\Tools\Data;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 class FilterCollection extends ArrayCollection {
+	/**
+	 * Used only for Serializer get work properly
+	 * @JMS\Type("array<Webit\Tools\Data\Filter>")
+	 * @JMS\AccessType("public_method")
+	 */
+	private $filters;
+	
 	public function addFilter(FilterInterface $filter) {
-		$this->set($sorter->getProperty(),$filter);
+		$this->set($filter->getProperty(),$filter);
 	}
 	
 	public function getFilters() {
@@ -18,6 +26,15 @@ class FilterCollection extends ArrayCollection {
 	
 	public function getFilter($property) {
 		return $this->get($property);
+	}
+	
+	/**
+	 * @param array $filters
+	 */
+	public function setFilters(array $filters) {
+		foreach($filters as $filter) {
+			$this->addFilter($filter);
+		}
 	}
 }
 ?>
