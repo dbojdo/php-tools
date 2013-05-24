@@ -15,15 +15,16 @@ class PreDeserializeListener implements EventSubscriberInterface {
 	 * @param PreDeserializeEvent $event
 	 */
 	public function onPreDeserialize(PreDeserializeEvent $event) {
-		switch($event->getType()['name']) {
+		$type = $event->getType();
+		switch($type['name']) {
 			case 'Webit\Tools\Data\FilterCollection':
 				$data = $event->getData();
 				$event->setData(array('filters'=>$data));
-			break;
+				break;
 			case 'Webit\Tools\Data\SorterCollection':
 				$data = $event->getData();
 				$event->setData(array('sorters'=>$data));
-			break;
+				break;
 		}
 	}
 }
