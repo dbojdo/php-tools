@@ -7,27 +7,29 @@ namespace Webit\Tools\Text;
  */
 class Slugifier {
 	/**
-	 * 
 	 * @param string $text
 	 * @return string
 	 */
 	static public function slugify($text) {
 		// remove double or more whitespaces
 		// replace non letter or digits by -
-		$text = preg_replace(array('/\s{2,}/','~[^\\pL\d]+~u'),array('','-'),$text);
+		$text = preg_replace('~[^\\pL\d]+~u', '-', $text);
 
 		// trim
 		$text = trim($text, '-');
 
-		// transliterate
-		$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-
 		// lowercase
 		$text = mb_strtolower($text);
-
+		
+		// transliterate
+		$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+		$text = preg_replace('/\s{2,}/','',$text);
+		
 		// remove unwanted characters
 		$text = preg_replace('~[^-\w]+~', '', $text);
 
+		$text = empty($text) ? null : $text;
+		
 		return $text;
 	}
 }
