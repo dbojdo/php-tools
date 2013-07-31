@@ -243,23 +243,25 @@ class ORMQueryDecorator {
 		$name = (array)$this->underscoreToCamelCase($property);
 		$alias = $this->qb->getRootAlias();
 
+		$arResultProperties = array();
 		if(key_exists($property,$this->propertyMap)) {
-			$arProperty = $this->propertyMap[$property];
-			$alias = isset($arProperty['alias']) ? $arProperty['alias'] : $alias;
-			$name = isset($arProperty['name']) ? (array)$arProperty['name'] : $name;
-		}
-		
-		$arProperties = array();
-		foreach($name as $n) {
-			$a = $alias;
-			if(is_array($n)) {
-				$a = key_exists('alias',$n) ? $n['alias'] : $alias;
-				$n = key_exists('name',$n) ? $n['name'] : array_shift($n);
+			$ar = isset($this->propertyMap[0]) ? $this->propertyMap[$property] : array($this->propertyMap[$property]);
+			$arProperties = $this->propertyMap[$property];
+			foreach($arProperties as $arProperty) {
+				$alias = isset($arProperty['alias']) ? $arProperty['alias'] : $alias;
+				$name = isset($arProperty['name']) ? (array)$arProperty['name'] : $name;
+				foreach($name as $n) {
+					$a = $alias;
+					if(is_array($n)) {
+						$a = key_exists('alias',$n) ? $n['alias'] : $alias;
+						$n = key_exists('name',$n) ? $n['name'] : array_shift($n);
+					}
+					$arResultProperties[] = $alias ? ($a. '.'.$n) : $n; 
+				}
 			}
-			$arProperties[] = $alias ? ($a. '.'.$n) : $n; 
 		}
 		
-		return $arProperties;
+		return $arResultProperties;
 	}
 	
 	private function getStringValueExpression(FilterParamsInterface $filterParams, $value) {
