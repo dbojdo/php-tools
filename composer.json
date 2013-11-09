@@ -1,20 +1,28 @@
 {
 	"name" : "webit/php-tools",
-	"type": "library",
-	"description": "Web-IT PHP Tool Kit",
-	"keywords": ["web-it","php","php tools"],
-	"homepage": "http://www.web-it.eu",
-	"license": "Web-IT",
-	"authors": [
-		{
-			"name": "Daniel Bojdo Web-IT",
-			"homepage": "http://www.web-it.eu"
+	"description" : "Web-IT PHP Tool Kit",
+	"type" : "library",
+	"authors" : [{
+			"name" : "Daniel Bojdo Web-IT",
+			"homepage" : "http://www.web-it.eu"
 		}
 	],
-	"require": {
-		"php": ">=5.3.2"
+	"keywords" : [
+		"web-it",
+		"php",
+		"php tools"
+	],
+	"homepage" : "http://www.web-it.eu",
+	"license" : [
+		"Web-IT"
+	],
+	"require" : {
+		"php" : ">=5.3.2",
+		"gedmo/doctrine-extensions" : "*"
 	},
-	"autoload": {
-		"psr-0": { "Webit\\Tools": "lib/" }
+	"autoload" : {
+		"psr-0" : {
+			"Webit\\Tools" : "lib/"
+		}
 	}
 }
