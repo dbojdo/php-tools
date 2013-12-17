@@ -20,7 +20,7 @@ class SorterCollection extends ArrayCollection
 
     public function getSorters()
     {
-        return $this->getValues();
+        return $this->getValues() ?: array();
     }
 
     public function removeSorter(SorterInterface $sorter)

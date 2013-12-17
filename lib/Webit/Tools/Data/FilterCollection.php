@@ -20,7 +20,7 @@ class FilterCollection extends ArrayCollection
 
     public function getFilters()
     {
-        return $this->getValues();
+        return $this->getValues() ?: array();
     }
 
     public function removeFilter(FilterInterface $filter)

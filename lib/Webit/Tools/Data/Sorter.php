@@ -1,10 +1,22 @@
 <?php
 namespace Webit\Tools\Data;
 
+use JMS\Serializer\Annotation as JMS;
+
 class Sorter implements SorterInterface
 {
+    /**
+     * 
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $property;
 
+    /**
+     *
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $direction;
 
     /**
