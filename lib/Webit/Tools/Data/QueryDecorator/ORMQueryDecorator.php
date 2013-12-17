@@ -259,6 +259,10 @@ class ORMQueryDecorator
         if (key_exists($property,$this->propertyMap)) {
             $ar = isset($this->propertyMap[0]) ? $this->propertyMap[$property] : array($this->propertyMap[$property]);
             $arProperties = $this->propertyMap[$property];
+            if(!key_exists(0, $arProperties)) {
+                $arProperties = array($arProperties);
+            }
+            
             foreach ($arProperties as $arProperty) {
                 $alias = isset($arProperty['alias']) ? $arProperty['alias'] : $alias;
                 $name = isset($arProperty['name']) ? (array) $arProperty['name'] : $name;
