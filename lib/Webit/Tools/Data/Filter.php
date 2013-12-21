@@ -35,7 +35,7 @@ class Filter implements FilterInterface
      * @var string
      * @JMS\Type("string")
      */
-    protected $comparision = FilterInterface::COMPARISION_EQUAL;
+    protected $comparison = FilterInterface::COMPARISON_EQUAL;
 
     /**
      *
@@ -89,20 +89,20 @@ class Filter implements FilterInterface
 
     /**
      *
-     * @param string $comparision
+     * @param string $comparison
      */
-    public function setComparision($comparision)
+    public function setComparison($comparison)
     {
-        $this->comparision = $comparision;
+        $this->comparison = $comparison;
     }
 
     /**
      * (non-PHPdoc)
-     * @see Webit\Tools\Data\FilterInterface::getComparision()
+     * @see Webit\Tools\Data\FilterInterface::getComparison()
      */
-    public function getComparision()
+    public function getComparison()
     {
-        return $this->comparision;
+        return $this->comparison;
     }
 
     /**

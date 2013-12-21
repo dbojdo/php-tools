@@ -3,17 +3,17 @@ namespace Webit\Tools\Data;
 
 interface FilterInterface
 {
-    const COMPARISION_NOT = 'not';
-    const COMPARISION_EQUAL = 'eq';
-    const COMPARISION_GREATER = 'gt';
-    const COMPARISION_LESS = 'lt';
-    const COMPARISION_GREATER_OR_EQUAL = 'gte';
-    const COMPARISION_LESS_OR_EQUAL = 'lte';
+    const COMPARISON_NOT = 'not';
+    const COMPARISON_EQUAL = 'eq';
+    const COMPARISON_GREATER = 'gt';
+    const COMPARISON_LESS = 'lt';
+    const COMPARISON_GREATER_OR_EQUAL = 'gte';
+    const COMPARISON_LESS_OR_EQUAL = 'lte';
 
-    const COMPARISION_DESCENDANT_NODE = 'desc';
-    const COMPARISION_CHILD_NODE = 'child';
-    const COMPARISION_DESCENDANT_OR_EQUAL_NODE = 'desce';
-    const COMPARISION_CHILD_OR_EQUAL_NODE = 'childe';
+    const COMPARISON_DESCENDANT_NODE = 'desc';
+    const COMPARISON_CHILD_NODE = 'child';
+    const COMPARISON_DESCENDANT_OR_EQUAL_NODE = 'desce';
+    const COMPARISON_CHILD_OR_EQUAL_NODE = 'childe';
 
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_STRING = 'string';
@@ -41,7 +41,7 @@ interface FilterInterface
     /**
      * @return string
      */
-    public function getComparision();
+    public function getComparison();
 
     /**
      * @return FilterParamsInterface

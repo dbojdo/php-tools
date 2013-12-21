@@ -48,9 +48,13 @@ class ORMQueryDecorator
      */
     public function applyFilters(FilterCollection $filterCollection)
     {
-        foreach ($filterCollection as $filter) {
+        foreach ($filterCollection->getValues() as $filter) {
             $property = $filter->getProperty();
             $property = $this->getQueryProperty($property);
+            if(count($property) == 0) {
+                return $this;
+            }
+            
             switch ($filter->getType()) {
                 case FilterInterface::TYPE_STRING:
                     $this->applyStringFilter($property, $filter);
@@ -85,16 +89,16 @@ class ORMQueryDecorator
             $value->setTime(0, 0, 0);
         }
 
-        switch ($filter->getComparision()) {
-            case FilterInterface::COMPARISION_GREATER:
+        switch ($filter->getComparison()) {
+            case FilterInterface::COMPARISON_GREATER:
                 $qb->andWhere($qb->expr()->gt($property,(':'.$paramName)));
                 $qb->setParameter($paramName, $value,'datetime');
             break;
-            case FilterInterface::COMPARISION_LESS:
+            case FilterInterface::COMPARISON_LESS:
                 $qb->andWhere($qb->expr()->lt($property,(':'.$paramName)));
                 $qb->setParameter($paramName, $value,'datetime');
             break;
-            case FilterInterface::COMPARISION_LESS_OR_EQUAL:
+            case FilterInterface::COMPARISON_LESS_OR_EQUAL:
                 if ($filter->getType() == FilterInterface::TYPE_DATE) {
                     $value->add(new \DateInterval('P1D'));
                     $qb->andWhere($qb->expr()->lt($property,(':'.$paramName)));
@@ -104,19 +108,18 @@ class ORMQueryDecorator
                     $qb->setParameter($paramName, $value,'datetime');
                 }
             break;
-            case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
+            case FilterInterface::COMPARISON_GREATER_OR_EQUAL:
                 $qb->andWhere($qb->expr()->gte($property,(':'.$paramName)));
                 $qb->setParameter($paramName, $value,'datetime');
             break;
             default:
-                // FilterInterface::COMPARISION_EQUAL:
+                // FilterInterface::COMPARISON_EQUAL:
                 if ($filter->getType() == FilterInterface::TYPE_DATE) {
                     $qb->andWhere($qb->expr()->gte($property,(':'.$paramName)));
                     $qb->setParameter($paramName, $value,'datetime');
 
                     $valueTo = clone($value);
                     $valueTo->add(new \DateInterval('P1D'));
-                    $valueTo = $valueTo->format('Y-m-d H:i:s');
                     $qb->andWhere($qb->expr()->lt($property,(':'.$paramName.'_2')));
                     $qb->setParameter(($paramName.'_2'), $valueTo,'datetime');
                 } else {
@@ -154,24 +157,24 @@ class ORMQueryDecorator
         $value = (float) $filter->getValue();
         $arCond = array();
         foreach ($property as $f) {
-            switch ($filter->getComparision()) {
-                case FilterInterface::COMPARISION_GREATER:
+            switch ($filter->getComparison()) {
+                case FilterInterface::COMPARISON_GREATER:
                     $arCond[] = $qb->expr()->gt($f,$value);
                     break;
-                case FilterInterface::COMPARISION_LESS:
+                case FilterInterface::COMPARISON_LESS:
                     $arCond[] = $qb->expr()->lt($f,$value);
                     break;
-                case FilterInterface::COMPARISION_LESS_OR_EQUAL:
+                case FilterInterface::COMPARISON_LESS_OR_EQUAL:
                     $arCond[] = $qb->expr()->lte($f,$value);
                     break;
-                case FilterInterface::COMPARISION_GREATER_OR_EQUAL:
+                case FilterInterface::COMPARISON_GREATER_OR_EQUAL:
                     $arCond[] = $qb->expr()->gte($f,$value);
                     break;
-                case FilterInterface::COMPARISION_NOT:
+                case FilterInterface::COMPARISON_NOT:
                     $arCond[] = $qb->expr()->neq($f,$value);
                     break;
                 default:
-                    //FilterInterface::COMPARISION_EQUAL:
+                    //FilterInterface::COMPARISON_EQUAL:
                     $arCond[] = $qb->expr()->eq($f,$value);
             }
         }
@@ -199,13 +202,14 @@ class ORMQueryDecorator
     {
         $qb = $this->qb;
         $arValue = explode(',',$filter->getValue());
-
         $arCond = array();
         foreach ($property as $f) {
-            $arCond[] = $qb->expr()->in($property,$arValue);
+            $arCond[] = $qb->expr()->in($f,$arValue);
         }
-
-        $qb->andWhere($qb->expr()->orx($arCond));
+        
+        if (count($arCond) > 0) {
+            $this->qb->andWhere(call_user_func_array(array($qb->expr(),'orx'), $arCond));
+        }
     }
 
     /**
@@ -252,9 +256,10 @@ class ORMQueryDecorator
 
     private function getQueryProperty($property)
     {
+        
         $name = (array) $this->underscoreToCamelCase($property);
         $alias = $this->qb->getRootAlias();
-
+        
         $arResultProperties = array();
         if (key_exists($property,$this->propertyMap)) {
             $ar = isset($this->propertyMap[0]) ? $this->propertyMap[$property] : array($this->propertyMap[$property]);
@@ -274,6 +279,10 @@ class ORMQueryDecorator
                     }
                     $arResultProperties[] = $alias ? ($a. '.'.$n) : $n;
                 }
+            }
+        } else {
+            foreach($name as $n) {
+                $arResultProperties[] = 'r.'.$n;
             }
         }
 

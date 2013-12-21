@@ -90,18 +90,18 @@ class QOMQueryDecorator
 
         $constraint = null;
         foreach ($arFields as $qField) {
-            switch ($filter->getComparision()) {
-                case FilterInterface::COMPARISION_CHILD:
+            switch ($filter->getComparison()) {
+                case FilterInterface::COMPARISON_CHILD:
                     $c = $qf->childNode($filter->getValue(),$qField->getAlias());
                 break;
-                case FilterInterface::COMPARISION_DESCENDANT:
+                case FilterInterface::COMPARISON_DESCENDANT:
                     $c = $qf->descendantNode($filter->getValue(),$qField->getAlias());
                 break;
-                case FilterInterface::COMPARISION_CHILD_OR_EQUAL:
+                case FilterInterface::COMPARISON_CHILD_OR_EQUAL:
                     $c = $qf->orConstraint($qf->childNode($filter->getValue(),$qField->getAlias()),
                         $qf->sameNode($filter->getValue(),$qField->getAlias()));
                 break;
-                case FilterInterface::COMPARISION_DESCENDANT_OR_EQUAL:
+                case FilterInterface::COMPARISON_DESCENDANT_OR_EQUAL:
                     $c = $qf->orConstraint($qf->descendantNode($filter->getValue(),$qField->getAlias()),
                     $qf->sameNode($filter->getValue(),$qField->getAlias()));
                 break;

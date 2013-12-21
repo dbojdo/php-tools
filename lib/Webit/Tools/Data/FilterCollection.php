@@ -4,8 +4,7 @@ namespace Webit\Tools\Data;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class FilterCollection extends ArrayCollection
-{
-
+{    
     public function addFilter(FilterInterface $filter)
     {
         $this->set($filter->getProperty(),$filter);

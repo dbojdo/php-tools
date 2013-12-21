@@ -50,8 +50,6 @@ class CollectionSerializationHandler implements SubscribingHandlerInterface {
     public function deserializeCollection(VisitorInterface $visitor, $data, array $type, Context $context)
     {
         $cls = $type['name'];
-        $type['name'] = 'array';
-        
         $coll = new $cls($visitor->visitArray($data, $type, $context));
         
         return $coll;

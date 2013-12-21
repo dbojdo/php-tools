@@ -5,6 +5,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class SorterCollection extends ArrayCollection
 {
+
     public function addSorter(SorterInterface $sorter)
     {
         $this->set($sorter->getProperty(),$sorter);
