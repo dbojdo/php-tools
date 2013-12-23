@@ -5,24 +5,55 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class FilterCollection extends ArrayCollection
 {    
+    /**
+     * 
+     * @param FilterInterface $filter
+     */
     public function addFilter(FilterInterface $filter)
     {
-        $this->set($filter->getProperty(),$filter);
+        $this->add($filter);
     }
 
-    public function getFilters()
+    /**
+     * 
+     * @param string $property
+     * @return FilterCollection
+     */
+    public function getFilters($property = null)
     {
-        return $this->getValues();
+        if($property) {
+            $coll = $this->filter(function(FilterInterface $filter) use ($property) {
+                return $filter->getProperty() == $property;
+            });
+            
+            return $coll;
+        }
+        
+        return $this;
     }
 
+    /**
+     * 
+     * @param FilterInterface $filter
+     */
     public function removeFilter(FilterInterface $filter)
     {
         $this->removeElement(filter);
     }
 
+    /**
+     * 
+     * @param string $property
+     * @return FilterCollection
+     */
     public function getFilter($property)
     {
-        return $this->get($property);
+        $coll = $this->getFilters($property);
+        if($coll->count() > 0) {
+            return $coll->first();
+        }
+        
+        return null;
     }
 
     /**

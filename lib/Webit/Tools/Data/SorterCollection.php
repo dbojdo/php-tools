@@ -6,24 +6,55 @@ use Doctrine\Common\Collections\ArrayCollection;
 class SorterCollection extends ArrayCollection
 {
 
+    /**
+     * 
+     * @param SorterInterface $sorter
+     */
     public function addSorter(SorterInterface $sorter)
     {
-        $this->set($sorter->getProperty(),$sorter);
+        $this->add($sorter);
     }
 
-    public function getSorters()
+    /**
+     * 
+     * @param string $property
+     * @return SorterCollection
+     */
+    public function getSorters($property = null)
     {
-        return $this->getValues();
+        if($property) {
+            $coll = $this->filter(function(SorterInterface $sorter) use ($property){
+                return $sorter->getProperty() == $property;
+            });
+            
+            return $coll;
+        }
+        
+        return $this;
     }
 
+    /**
+     * 
+     * @param SorterInterface $sorter
+     */
     public function removeSorter(SorterInterface $sorter)
     {
         $this->removeElement($sorter);
     }
 
+    /**
+     * 
+     * @param string $property
+     * @return SorterInterface
+     */
     public function getSorter($property)
     {
-        return $this->get($property);
+        $coll = $this->getSorters($property);
+        if($coll->count() > 0) {
+            return $coll->first();
+        }
+        
+        return null;
     }
 
     /**

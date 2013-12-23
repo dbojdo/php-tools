@@ -78,4 +78,23 @@ class FilterParams implements FilterParamsInterface
     {
         $this->negation = (bool) $negation;
     }
+    
+    public function getExpression($value) {
+        $cs = $this->getCaseSensitive();
+        $wc = $this->getLikeWildcard();
+        switch ($wc) {
+        	case FilterParamsInterface::LIKE_WILDCARD_LEFT:
+        	    $value = '%'.$value;
+        	    break;
+        	case FilterParamsInterface::LIKE_WILDCARD_RIGHT:
+        	    $value .= '%';
+        	    break;
+        	case FilterParamsInterface::LIKE_WILDCARD_BOTH:
+        	    $value = '%'.$value . '%';
+        	    break;
+        }
+        $value = $cs ? $value : mb_strtolower($value);
+        
+        return $value;
+    }
 }

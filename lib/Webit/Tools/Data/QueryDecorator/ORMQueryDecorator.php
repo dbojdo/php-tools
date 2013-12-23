@@ -17,18 +17,24 @@ class ORMQueryDecorator
     protected $qb;
 
     /**
-   * @array
+     * @var array
      */
-    protected $propertyMap;
+    protected $filterMap;
 
+    /**
+     * @var array
+     */
+    protected $sorterMap;
+    
     /**
      *
      * @param QueryBuilder $qb
      */
-    public function __construct(QueryBuilder $qb, $propertyMap = array())
+    public function __construct(QueryBuilder $qb, $filterMap = array(), $sorterMap = array())
     {
         $this->qb = $qb;
-        $this->propertyMap = $propertyMap;
+        $this->filterMap = $filterMap;
+        $this->sorterMap = empty($sorterMap) ? $filterMap : $sorterMap;
     }
 
     /**
@@ -37,9 +43,9 @@ class ORMQueryDecorator
      * @param  array                                              $propertyMap
      * @return \Webit\Tools\Data\QueryDecorator\ORMQueryDecorator
      */
-    public static function create(QueryBuilder $qb, $propertyMap = array())
+    public static function create(QueryBuilder $qb, $filterMap = array(), $sorterMap = array())
     {
-        return new self($qb, $propertyMap);
+        return new self($qb, $filterMap, $sorterMap);
     }
 
     /**
@@ -50,7 +56,7 @@ class ORMQueryDecorator
     {
         foreach ($filterCollection->getValues() as $filter) {
             $property = $filter->getProperty();
-            $property = $this->getQueryProperty($property);
+            $property = $this->getQueryProperty($property,'filter');
             if(count($property) == 0) {
                 return $this;
             }
@@ -219,7 +225,7 @@ class ORMQueryDecorator
     public function applySorters(SorterCollection $sorterCollection)
     {
         foreach ($sorterCollection as $sorter) {
-            $arFields = $this->getQueryProperty($sorter->getProperty());
+            $arFields = $this->getQueryProperty($sorter->getProperty(),'sort');
             foreach ($arFields as $f) {
                 $this->qb->addOrderBy($f,$sorter->getDirection());
             }
@@ -237,7 +243,7 @@ class ORMQueryDecorator
         $qb = $this->qb;
         $arCond = array();
         foreach ($fields as $field) {
-            $arField = $this->getQueryProperty($field);
+            $arField = $this->getQueryProperty($field, 'filter');
             // FIXME: tylko po polach typu string
             // FIXME: możliwość ustalenia like %saf% lub %dfssa lub dsfd%
             // FIXME: możliwość ustalenia dodatkowych filtrów (lowercase, usuwanie białych znaków, przecinków itd)
@@ -254,16 +260,17 @@ class ORMQueryDecorator
         return $this;
     }
 
-    private function getQueryProperty($property)
+    private function getQueryProperty($property, $scope = 'filter')
     {
+        $propertyMap = $scope == 'filter' ? $this->filterMap : $this->sorterMap;
         
         $name = (array) $this->underscoreToCamelCase($property);
         $alias = $this->qb->getRootAlias();
         
         $arResultProperties = array();
-        if (key_exists($property,$this->propertyMap)) {
-            $ar = isset($this->propertyMap[0]) ? $this->propertyMap[$property] : array($this->propertyMap[$property]);
-            $arProperties = $this->propertyMap[$property];
+        if (key_exists($property,$propertyMap)) {
+            $ar = isset($propertyMap[0]) ? $propertyMap[$property] : array($propertyMap[$property]);
+            $arProperties = $propertyMap[$property];
             if(!key_exists(0, $arProperties)) {
                 $arProperties = array($arProperties);
             }
@@ -282,7 +289,7 @@ class ORMQueryDecorator
             }
         } else {
             foreach($name as $n) {
-                $arResultProperties[] = 'r.'.$n;
+                $arResultProperties[] = $alias . '.' . $n;
             }
         }
 
@@ -291,22 +298,7 @@ class ORMQueryDecorator
 
     private function getStringValueExpression(FilterParamsInterface $filterParams, $value)
     {
-        $cs = $filterParams->getCaseSensitive();
-        $wc = $filterParams->getLikeWildcard();
-        switch ($wc) {
-            case FilterParamsInterface::LIKE_WILDCARD_LEFT:
-                $value = '%'.$value;
-                break;
-            case FilterParamsInterface::LIKE_WILDCARD_RIGHT:
-                $value .= '%';
-                break;
-            case FilterParamsInterface::LIKE_WILDCARD_BOTH:
-                $value = '%'.$value . '%';
-                break;
-        }
-        $value = $cs ? $value : mb_strtolower($value);
-
-        return $this->qb->expr()->literal($value);
+        return $this->qb->expr()->literal($filterParams->getExpression($value));
     }
 
     private function underscoreToCamelCase($string, $capitalizeFirstCharacter = false)
