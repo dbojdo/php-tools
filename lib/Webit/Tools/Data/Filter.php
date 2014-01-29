@@ -129,6 +129,9 @@ class Filter implements FilterInterface
      */
     public function getParams()
     {
-        return $this->params ?: new FilterParams();
+        if($this->params == null) {
+            $this->params = new FilterParams();
+        }
+        return $this->params;
     }
 }
