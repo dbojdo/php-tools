@@ -10,17 +10,20 @@ use JMS\Serializer\Annotation as JMS;
 class FilterParams implements FilterParamsInterface
 {
     /**
-   * @var bool
+     * @var bool
+     * @JMS\Type("bool")
      */
     protected $caseSensitive = false;
 
     /**
      * @var string
+     * @JMS\Type("string")
      */
     protected $likeWildcard = FilterParamsInterface::LIKE_WILDCARD_NONE;
 
     /**
      * @var bool
+     * @JMS\Type("boolean")
      */
     protected $negation = false;
 
