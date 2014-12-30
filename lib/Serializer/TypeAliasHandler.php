@@ -83,6 +83,8 @@ class TypeAliasHandler implements SubscribingHandlerInterface
                 );
             }
         }
+
+        return $support;
     }
 
     /**
