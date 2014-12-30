@@ -96,11 +96,11 @@ class TypeAliasHandler implements SubscribingHandlerInterface
      */
     public function resolveInterface(VisitorInterface $visitor, $data, array $type, Context $context)
     {
-        if (! isset($this->classMap[$type[0]])) {
+        if (! isset($this->classMap[$type['name']])) {
             throw new \UnexpectedValueException(sprintf('Unsupported type: "%s"', $type[0]));
         }
 
-        $type[0] = $this->classMap[$type[0]];
+        $type['name'] = $this->classMap[$type['name']];
 
         return $context->accept($data, $type);
     }
