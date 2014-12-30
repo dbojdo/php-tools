@@ -1,7 +1,7 @@
 <?php
 namespace Webit\Tools\Text;
 
-use  Gedmo\Sluggable\Util\Urlizer;
+use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Webit\Tools\Text\Slugifier

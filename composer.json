@@ -17,12 +17,20 @@
 		"Web-IT"
 	],
 	"require" : {
-		"php" : ">=5.3.2",
-		"gedmo/doctrine-extensions" : "*"
+		"php" : ">=5.3.2"
+	},
+  	"require-dev": {
+	  	"doctrine/orm": "~2.3",
+	  	"gedmo/doctrine-extensions" : "~2.3",
+	    "jms/serializer" : "~0.12"
 	},
 	"autoload" : {
-		"psr-0" : {
-			"Webit\\Tools" : "lib/"
+		"psr-4" : {
+			"Webit\\Tools\\" : "lib/"
 		}
+	},
+	"suggest": {
+	  "doctrine/orm": "Support for Data QueryDecorator",
+	  "jms/serializer" : "Handling Filter/Sorter Collections as TypeAlias"
 	}
 }
