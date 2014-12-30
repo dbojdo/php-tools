@@ -11,6 +11,7 @@ namespace Webit\Tools\Serializer;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\VisitorInterface;
 
 class TypeAliasHandler implements SubscribingHandlerInterface
@@ -72,14 +73,14 @@ class TypeAliasHandler implements SubscribingHandlerInterface
                     'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
                     'type' => $interface,
                     'format' => $format,
-                    'method' => 'resolveInterface'
+                    'method' => 'serializeInterface'
                 );
 
                 $support[] = array(
                     'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
                     'type' => $interface,
                     'format' => $format,
-                    'method' => 'resolveInterface'
+                    'method' => 'deserializeInterface'
                 );
             }
         }
@@ -94,14 +95,25 @@ class TypeAliasHandler implements SubscribingHandlerInterface
      * @param Context $context
      * @return mixed
      */
-    public function resolveInterface(VisitorInterface $visitor, $data, array $type, Context $context)
+    public function deserializeInterface(VisitorInterface $visitor, $data, array $type, Context $context)
     {
         if (! isset($this->classMap[$type['name']])) {
-            throw new \UnexpectedValueException(sprintf('Unsupported type: "%s"', $type[0]));
+            throw new \UnexpectedValueException(sprintf('Unsupported type: "%s"', $type['name']));
         }
 
         $type['name'] = $this->classMap[$type['name']];
 
         return $context->accept($data, $type);
+    }
+
+    public function serializeInterface(VisitorInterface $visitor, $data, array $type, SerializationContext $context)
+    {
+        if (! isset($this->classMap[$type['name']])) {
+            throw new \UnexpectedValueException(sprintf('Unsupported type: "%s"', $type['name']));
+        }
+
+        $type['name'] = $this->classMap[$type['name']];
+
+        return $context->accept(clone($data), $type);
     }
 }
