@@ -41,8 +41,19 @@ class MixedTypeHandler implements SubscribingHandlerInterface
             'method' => 'deserializeMixed'
         );
 
+        $supported[] = array(
+            'format' => 'json',
+            'type' => 'mixed',
+            'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
+            'method' => 'serializeMixed'
+        );
 
         return $supported;
+    }
+
+    public function serializeMixed(VisitorInterface $visitor, $data, array $type, Context $context)
+    {
+        return $data;
     }
 
     public function deserializeMixed(VisitorInterface $visitor, $data, array $type, Context $context)
