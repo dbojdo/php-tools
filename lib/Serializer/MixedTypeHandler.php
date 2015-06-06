@@ -53,7 +53,7 @@ class MixedTypeHandler implements SubscribingHandlerInterface
 
     public function serializeMixed(VisitorInterface $visitor, $data, array $type, Context $context)
     {
-        return $data;
+        return $data->getValue();
     }
 
     public function deserializeMixed(VisitorInterface $visitor, $data, array $type, Context $context)
